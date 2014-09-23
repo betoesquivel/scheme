@@ -1,0 +1,21 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-advanced-reader.ss" "lang")((modname definitionsFirstClass) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f ())))
+; eleva un número al cuadrado
+(define (cuadrado x) (* x x) )
+
+; calcula el area de un circulo
+(define (area r)(* 3.1415 (cuadrado r) ) )
+
+; función que 
+
+; función que determina si es triángulo o no
+(define (triangulo? a b c)
+  (and (> (+ a b) c) (> (+ a c) b) (> (+ b c) a) ) )
+
+; función que determina el tipo de triángulo definido por la longitud de sus lados
+(define (triangulo a b c)
+  (cond ((not (triangulo? a b c)) 'NO-TRIANGULO)
+        ((= a b c) 'EQUILATERO)
+        ((or (= a b) (= a c) (= b c)) 'ISOCELES)
+        (else 'ESCALENO) ))
