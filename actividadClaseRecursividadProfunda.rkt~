@@ -1,0 +1,32 @@
+; Encontrar elemento mayor de una lista imbricada de números
+; Caso base: Lista vacía => ()
+; Caso general: Lista con elementos '(())
+; Usa función max para sacar el mayor de una lista de solamente números
+(
+ define (profundidad lista)
+  (cond ((null? lista)'()); caso base
+        ((number? (car lista))
+         (max-profundidad (car lista)
+               (profundidad (cdr lista)))); me regresará un num o una lista vacía
+        (else (max-profundidad (profundidad (car lista))
+                    (profundidad (cdr lista))))
+  )
+)  
+
+; Calcula la profundidad de una lista
+(
+ define (profundidad-aux lista)
+  (cond ((null? lista) 0); caso base
+        ((number? (car lista)) 
+         (profundidad-aux (cdr lista)))
+        (else (max (+ 1 (profundidad-aux (car lista)))
+                   (profundidad-aux (cdr lista)))))
+)
+
+; Obtiene el mayor de entre dos listas o números
+(
+ define (max-profundidad a b)
+  (cond ((null? a) b)
+        ((null? b) a)
+        (else (max a b)))
+)
