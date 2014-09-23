@@ -27,7 +27,8 @@
                 lista
         (simetrico-aux (- n 1) (list '< lista '> ))
 ))     
- 
+
+; Deletes one element x from list lista.
 (define (elimina x lista)
         (cond
                 ((null? lista) lista)
