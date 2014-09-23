@@ -4,18 +4,12 @@
   (
    cond ((null? lista) 
          0); caso base
-        ((atom? (car lista)) 
-         (profundidad (cdr lista)))
-        (else 
+        ((list? (car lista)) 
          (max (+ 1 (profundidad (car lista)))
                    (profundidad (cdr lista))))
+        (else 
+         (profundidad (cdr lista)))
   )
-)
-
-; Checks if a is an atom or not
-(
- define (atom? a)
-  (not (pair? a))
 )
 
 ; Constructs simetrical pattern with N nesting levels. 
