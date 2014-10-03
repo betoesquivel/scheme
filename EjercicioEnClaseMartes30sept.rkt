@@ -14,12 +14,17 @@
   (lambda (l s)
     (cond 
       [(null? l) s]
-      [(primitive? (car l)) 
-       (nprocs-aux (cdr l) s)]
-      [else (nprocs-aux (cdr l) (+ s 1))]
+      [(list? (car l)) (nprocs-aux (cdr l) (+ s (nprocs (car l))))]
+      [(not (primitive? (car l)))  
+       (nprocs-aux (cdr l) (+ s 1))]
+      [else (nprocs-aux (cdr l) s)]
     )
   )
 )
 
+;3. Programar la función recursiva mapea en Scheme que aplique 
+;una función que reciba como argumento a cada uno de los
+;elementos de una lista.
+1
 
                  
