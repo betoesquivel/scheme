@@ -18,6 +18,10 @@
 ; PROBLEMA 3
 ; Implementar la función recursiva sucesores que reciba una matriz de símbolos que representen un tablero del juego del 
 ; gato y la marca de un jugador, y regrese una lista de nuevos tableros que indiquen las jugadas válidas del jugador. 
+
+; estrategia, cada símbolo me regresa una lista de matrices
+; tengo dos matrices, una se va vaciando mientras la otra se va llenando, así no pierdo nunca la matriz...
+; creo mi matriz nueva, uniendo los renglones de las dos matrices con append
 (define sucesores
   (lambda (mat)
     (cond [(null? mat) '()]
