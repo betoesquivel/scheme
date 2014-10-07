@@ -14,3 +14,11 @@
     )
   )
 )
+
+; PROBLEMA 3
+; Implementar la función recursiva sucesores que reciba una matriz de símbolos que representen un tablero del juego del 
+; gato y la marca de un jugador, y regrese una lista de nuevos tableros que indiquen las jugadas válidas del jugador. 
+(define sucesores
+  (lambda (mat)
+    (cond [(null? mat) '()]
+          [(
