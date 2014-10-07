@@ -1,0 +1,7 @@
+;Programar la FOS pares en Scheme que sin utilizar recursividad
+;explícita cuente todos los números pares dentro de una matriz.
+(define pares 
+  (lambda (mat)
+    
+  )
+)
