@@ -19,10 +19,24 @@
 ; Implementar la función recursiva sucesores que reciba una matriz de símbolos que representen un tablero del juego del 
 ; gato y la marca de un jugador, y regrese una lista de nuevos tableros que indiquen las jugadas válidas del jugador. 
 
+; Matrices para el GATO
+(define gato1 '((X v X)(v O v)(X v O)))
+
 ; estrategia, cada símbolo me regresa una lista de matrices
 ; tengo dos matrices, una se va vaciando mientras la otra se va llenando, así no pierdo nunca la matriz...
 ; creo mi matriz nueva, uniendo los renglones de las dos matrices con append
 (define sucesores
   (lambda (mat)
-    (cond [(null? mat) '()]
-          [(
+    (sucesores-fila mat '() '())
+  )
+)
+; función para recorrer matriz línea por línea sin perder la información de la matriz. 
+(define sucesores-fila
+  (lambda (matRecorriendo matRecorrida result)
+    (cond
+      [(null? matRecorriendo) result]
+      [else (sucesores-fila (cdr matRecorriendo) (append matRecorrida (list (car matRecorriendo)))
+                            (append result (list (append matRecorrida matRecorriendo))) ) ]
+    )
+  )
+)
