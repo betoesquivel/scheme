@@ -26,18 +26,19 @@
 ; tengo dos matrices, una se va vaciando mientras la otra se va llenando, así no pierdo nunca la matriz...
 ; creo mi matriz nueva, uniendo los renglones de las dos matrices con append
 (define sucesores
-  (lambda (mat)
-    (sucesores-fila mat '() '())
+  (lambda (mat player)
+    (sucesores-fila mat '() '() player)
   )
 )
 ; función para recorrer matriz línea por línea sin perder la información de la matriz. 
 (define sucesores-fila
-  (lambda (matRecorriendo matRecorrida result)
+  (lambda (matRecorriendo matRecorrida result player)
     (cond
       [(null? matRecorriendo) result]
       [else (sucesores-fila (cdr matRecorriendo) (append matRecorrida (list (car matRecorriendo)))
                             (append result 
-                                    (sucesores-columna matRecorrida (car matRecorriendo) '() (cdr matRecorriendo) '()) ) 
+                                    (sucesores-columna matRecorrida (car matRecorriendo) '() (cdr matRecorriendo) '() player) )
+                            player
             ) 
       ]
     )
@@ -45,7 +46,7 @@
 )
 ; función para recorrer matriz columna por columna sin perder la información de la matriz.
 (define sucesores-columna
-  (lambda (filasAnteriores filaRecorriendo filaRecorrida filasPosteriores result)
+  (lambda (filasAnteriores filaRecorriendo filaRecorrida filasPosteriores result player)
     (cond
       [(null? filaRecorriendo) result]
       [(equal? (car filaRecorriendo) 'v)
@@ -53,15 +54,17 @@
                                
                          (append result      
                          (list (append filasAnteriores
-                               (append (list (append filaRecorrida filaRecorriendo)) 
+                               (append (list (append (append filaRecorrida (list player))
+                                             (cdr filaRecorriendo))) 
                                         filasPosteriores)) 
                          ) 
                          )
+                         player
        )
       ]
       [else (sucesores-columna filasAnteriores (cdr filaRecorriendo) (append filaRecorrida (list (car filaRecorriendo))) filasPosteriores
                                
-                         result
+                         result player
             )
       ]
     )
