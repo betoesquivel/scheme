@@ -70,3 +70,36 @@
     )
   )
 )
+
+; PROBLEMA 7
+; Implementar la función recursiva acumulado que a partir de un árbol regrese el mismo árbol, pero donde el valor
+; de cada nodo represente la suma de todos los nodos del subárbol del cual ese nodo es la raíz. 
+(define AB '(8 (5 (2 () ()) 
+                  (7 () ())) 
+               (9 () 
+                  (15 
+                   (11 () ()) 
+                   () ))))
+(define acumulado
+  (lambda (tree)
+    (cond [(null? tree) '()]
+          [else 
+           (append (list (acumulado-val tree))
+                   (append (list (acumulado (cadr tree)))
+                           (list (acumulado (caddr tree))))
+           )
+          ]
+    )
+  )
+)
+; Calcula el valor acumulado de las dos ramas hijos del nodo raiz del arbol que recibe. 
+(define acumulado-val
+  (lambda (tree)
+    (cond [(null? tree) 0]
+          [else (+ (car tree)
+                   (acumulado-val (cadr tree))
+                   (acumulado-val (caddr tree)))
+          ]
+    )
+  )
+)
