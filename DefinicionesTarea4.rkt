@@ -120,36 +120,51 @@
 )
 ; función que calcula la información estadística de un equipo
 (define info
-  (lambda (e)
+  (lambda (e lugar)
     (if (null? e) 
         '()
-        (list (car e) (jugados e) (diferencia e) (puntos e)))
+        (list lugar (car e) (jugados e) (diferencia e) (puntos e)))
   )
 )
 ; función que recibe dos equipos y regresa el equipo mayor. 
-(define mayorDe2
+(define mayorQue?
   (lambda (e1 e2)
-    (cond [(null? e2) e1]
-          [(null? e1) e2]
+    (cond [(null? e2) #t]
+          [(null? e1) #f]
           [else 
            (cond 
              [(equal? (puntos e1) (puntos e2))
-                (cond [(equal? (diferencia e1) (diferencia e2)) e1]
-                      [(> (diferencia e1) (diferencia e2)) e1]
-                      [else e2]
+                (cond [(equal? (diferencia e1) (diferencia e2)) #t]
+                      [(> (diferencia e1) (diferencia e2)) #t]
+                      [else #f]
                 )]
-             [(> (puntos e1) (puntos e2)) e1]
-             [else e2]
+             [(> (puntos e1) (puntos e2)) #t]
+             [else #f]
            )]
     )
   )
 )
-; función que regresa el mayor de una lista de equipos
-(define mayor
-  (lambda (lista)
-    (cond [(null? lista) '()]
-          [else
-           (mayorDe2 (car lista) (mayor (cdr lista)))]
+
+; función auxiliar que ordena lista, usando insertion sort...
+(define (ordenar-aux e liga)
+    (cond
+        [(null? liga) (cons e liga)] 
+        [(mayorQue? e (car liga)) (cons e liga)] 
+        (else 
+            (cons (car liga) (ordenar-aux e (cdr liga))) )))
+; función que ordena lista
+(define (ordenar liga)
+    (cond
+        [(null? liga) liga] 
+        (else
+            (ordenar-aux (car liga) (ordenar (cdr liga))) )))
+
+; función auxiliar para el ordenamiento de la liga que recibe la liga ordenada
+(define estadistica-aux
+  (lambda (liga lugar)
+    (if (null? liga) 
+        '()
+        (cons (info (car liga) lugar) (estadistica-aux (cdr liga) (+ 1 lugar)))
     )
   )
 )
@@ -157,7 +172,9 @@
 ; mayores puntos a menores puntos. 
 (define estadistica
   (lambda (liga)
-    (cond [(null? liga) '()] 
+    (estadistica-aux (ordenar liga) 1)
+  )
+)
 
 ; PROBLEMA 7
 ; Implementar la función recursiva acumulado que a partir de un árbol regrese el mismo árbol, pero donde el valor
