@@ -48,7 +48,8 @@
   (lambda (filasAnteriores filaRecorriendo filaRecorrida filasPosteriores result)
     (cond
       [(null? filaRecorriendo) result]
-      [else (sucesores-columna filasAnteriores (cdr filaRecorriendo) (append filaRecorrida (list (car filaRecorriendo))) filasPosteriores
+      [(equal? (car filaRecorriendo) 'v)
+       (sucesores-columna filasAnteriores (cdr filaRecorriendo) (append filaRecorrida (list (car filaRecorriendo))) filasPosteriores
                                
                          (append result      
                          (list (append filasAnteriores
@@ -56,6 +57,11 @@
                                         filasPosteriores)) 
                          ) 
                          )
+       )
+      ]
+      [else (sucesores-columna filasAnteriores (cdr filaRecorriendo) (append filaRecorrida (list (car filaRecorriendo))) filasPosteriores
+                               
+                         result
             )
       ]
     )
