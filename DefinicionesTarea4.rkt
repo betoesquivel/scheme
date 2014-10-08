@@ -36,7 +36,28 @@
     (cond
       [(null? matRecorriendo) result]
       [else (sucesores-fila (cdr matRecorriendo) (append matRecorrida (list (car matRecorriendo)))
-                            (append result (list (append matRecorrida matRecorriendo))) ) ]
+                            (append result 
+                                    (sucesores-columna matRecorrida (car matRecorriendo) '() (cdr matRecorriendo) '()) ) 
+            ) 
+      ]
+    )
+  )
+)
+; función para recorrer matriz columna por columna sin perder la información de la matriz.
+(define sucesores-columna
+  (lambda (filasAnteriores filaRecorriendo filaRecorrida filasPosteriores result)
+    (cond
+      [(null? filaRecorriendo) result]
+      [else (sucesores-columna filasAnteriores (cdr filaRecorriendo) (append filaRecorrida (list (car filaRecorriendo))) filasPosteriores
+                               
+                         (append result      
+                         (list (append filasAnteriores
+                               (append (list (append filaRecorrida filaRecorriendo)) 
+                                        filasPosteriores)) 
+                         ) 
+                         )
+            )
+      ]
     )
   )
 )
