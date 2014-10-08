@@ -2,9 +2,6 @@
 ; Eduardo Sánchez A01195815
 
 ; PROBLEMA 1
-; Implementar la función recursiva tokeniza reciba una lista posiblemente imbricada y la convierta en una lista plana que 
-; sustituya cada número por el símbolo N, cada símbolo por el símbolo S y cada sublista por una secuencia de símbolos 
-; I <elementos> D, donde <elementos> es una secuencia de elementos que depende del contenido de la sublista. 
 (define tokeniza
   (lambda (l)
     (cond [(null? l) '()]
@@ -15,10 +12,28 @@
   )
 )
 
+; PROBLEMA 2
+(define count
+  (lambda (list total)
+    (if (null? list)
+        total
+        (count (cdr list) (+ total 1)))))
+ 
+(define subelementos-aux
+  (lambda (matr cont res)
+    (cond
+      [(null? matr) (cons cont res)]
+      [(list? (car matr)) (subelementos-aux (cdr matr) (+ 1 cont) (append res (cons (subelementos-aux (car matr) 0 '()) '())))]
+      [else (subelementos-aux (cdr matr) (+ 1 cont) res)]
+    )
+  )
+)
+ 
+(define subelementos
+  (lambda (matr)
+    (subelementos-aux matr 0 '())))
+ 
 ; PROBLEMA 3
-; Implementar la función recursiva sucesores que reciba una matriz de símbolos que representen un tablero del juego del 
-; gato y la marca de un jugador, y regrese una lista de nuevos tableros que indiquen las jugadas válidas del jugador. 
-
 ; Matrices para el GATO
 (define gato1 '((X v X)(v O v)(X v O)))
 
@@ -70,11 +85,78 @@
     )
   )
 )
+
+; PROBLEMA 4
+(define renglon?
+  (lambda (renglon jugador)
+    (if (null? renglon) #t
+        (and (equal? (car renglon) jugador) (renglon? (cdr renglon) jugador))
+    )
+  )
+)
+ 
+(define renglones?
+  (lambda (tablero jugador)
+    (if (null? tablero) #f
+        (or (renglon? (car tablero) jugador) (renglones? (cdr tablero) jugador))
+    )
+  )
+)
+ 
+(define columna?
+  (lambda (tablero jugador)
+    (if (null? tablero) #t
+        (and (equal? (caar tablero) jugador) (columna? (cdr tablero) jugador))
+    )
+  )
+)
+ 
+(define sig-columna
+  (lambda (tablero)
+    (if (or (null? tablero) (null? (cdar tablero))) '()
+        (cons (cdar tablero) (sig-columna (cdr tablero)))
+    )
+  )
+)
+ 
+(define columnas?
+  (lambda (tablero jugador)
+    (if (null? tablero) #f
+        (or (columna? tablero jugador) (columnas? (sig-columna tablero) jugador))
+    )
+  )
+)
+ 
+(define jugador?
+  (lambda (renglon columna jugador)
+    (if (equal? columna 0) (equal? (car renglon) jugador)
+        (jugador? (cdr renglon) (- columna 1) jugador)
+    )
+  )
+)
+ 
+(define diagonal?
+  (lambda (tablero jugador columna incr)
+    (if (null? tablero) #t
+        (and (jugador? (car tablero) columna jugador) (diagonal? (cdr tablero) jugador (incr columna 1) incr))
+    )
+  )
+)
+ 
+(define ganador?
+  (lambda (tablero jugador)
+    (cond
+      [(renglones? tablero jugador) #t]
+      [(columnas? tablero jugador) #t]
+      [(diagonal? tablero jugador 0 +) #t]
+      [(diagonal? tablero jugador 2 -) #t]
+      [else #f]
+    )
+  )
+)
+
+
 ; PROBLEMA 5
-; Implementar la función recursiva estadistica que a partir de la base de datos de equipos de futbol regrese una 
-; lista con los nombres de los equipos, su # de juegos jugados, la diferencia de goles y el # de puntos de cada uno, 
-; ordenada por # de puntos y en caso de empate en puntos, por diferencia de goles. Recordar que el número de puntos 
-; se calcula como 3 puntos por cada juego ganado y 1 por cada juego empatado. 
 ; (eq jg je jp gf gc)
 ; eq = car
 ; jg = cadr, je = caddr, jp = cadddr
@@ -176,9 +258,27 @@
   )
 )
 
+; PROBLEMA 6
+(define AB '(8 (5 (2 () ())
+                  (7 () ()))
+               (9 ()
+                  (15 (11 () ())
+                      () ))))
+ 
+(define nivel-aux
+  (lambda (arbol cont)
+    (if (null? arbol) '()
+        (list cont (nivel-aux (cadr arbol) (+ cont 1)) (nivel-aux (caddr arbol) (+ cont 1)))
+    )
+  )
+)
+ 
+(define nivel
+  (lambda (arbol)
+    (nivel-aux arbol 1)))
+ 
+
 ; PROBLEMA 7
-; Implementar la función recursiva acumulado que a partir de un árbol regrese el mismo árbol, pero donde el valor
-; de cada nodo represente la suma de todos los nodos del subárbol del cual ese nodo es la raíz. 
 (define AB '(8 (5 (2 () ()) 
                   (7 () ())) 
                (9 () 
@@ -208,3 +308,72 @@
     )
   )
 )
+
+; PROBLEMA 8
+(define g
+'((A 0 2 0 10 0)
+  (B 0 0 9 0 5)
+  (C 12 0 0 6 0)
+  (D 0 0 0 0 7)
+  (E 0 0 3 0 0)))
+ 
+(define costo-ruta
+  (lambda (grafo ruta)
+    (recorrer grafo ruta 0)))
+ 
+(define recorrer
+  (lambda (grafo ruta costo)
+    (cond
+      [(null? (cdr ruta)) costo]
+      [(camino? grafo (car ruta) (cadr ruta)) (recorrer grafo (cdr ruta) (+ costo (camino grafo (car ruta) (cadr ruta))))]
+      [else 'no-ruta]
+    )
+  )
+)
+ 
+; Traduce el simbolo nombre de un nodo en su posicion dentro del grafo a partir de 0
+(define posicion
+  (lambda (grafo s)
+    (posicion-aux grafo s 0)))
+ 
+; Busca el nodo dentro del grafo, si no lo encuentra regresa -1
+(define posicion-aux
+  (lambda (grafo s cont)
+    (cond
+      [(null? grafo) -1]
+      [(equal? (caar grafo) s) cont]
+      [else (posicion-aux (cdr grafo) s (+ cont 1))]
+    )
+  )
+)
+ 
+; Determina si existe un camino desde el simbolo de origen al de destino en un grafo
+(define camino?
+  (lambda (grafo origen destino)
+    (and (> (posicion grafo origen) -1) (> (posicion grafo destino) -1)
+         (> (camino-aux grafo (posicion grafo origen) (posicion grafo destino)) 0))))
+ 
+; Regresa el valor dentro del grafo para el nodo en la posicion dada por renglon, hacia el nodo en la posicion dada por columna
+(define camino-aux
+  (lambda (grafo renglon columna)
+    (if (equal? renglon 0) (busca (cdar grafo) columna)
+        (camino-aux (cdr grafo) (- renglon 1) columna)
+    )
+  )
+)
+ 
+; Obtiene el valor de la lista dado por la posicion en pos
+(define busca
+  (lambda (lista pos)
+    (if (equal? pos 0) (car lista)
+        (busca (cdr lista) (- pos 1))
+    )
+  )
+)
+ 
+; Obtiene el costo de recorrer el grafo desde el nodo origen hasta el nodo destino
+(define camino
+  (lambda (grafo origen destino)
+    (camino-aux grafo (posicion grafo origen) (posicion grafo destino))))
+
+; PROBLEMA 9
