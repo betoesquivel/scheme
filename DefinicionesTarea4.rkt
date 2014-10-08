@@ -121,7 +121,9 @@
 ; función que calcula la información estadística de un equipo
 (define info
   (lambda (e)
-    (list (car e) (jugados e) (diferencia e) (puntos e))
+    (if (null? e) 
+        '()
+        (list (car e) (jugados e) (diferencia e) (puntos e)))
   )
 )
 ; función que recibe dos equipos y regresa el equipo mayor. 
@@ -142,6 +144,20 @@
     )
   )
 )
+; función que regresa el mayor de una lista de equipos
+(define mayor
+  (lambda (lista)
+    (cond [(null? lista) '()]
+          [else
+           (mayorDe2 (car lista) (mayor (cdr lista)))]
+    )
+  )
+)
+; función que calcula la estadística de toda la liga y la regresa ordenada de 
+; mayores puntos a menores puntos. 
+(define estadistica
+  (lambda (liga)
+    (cond [(null? liga) '()] 
 
 ; PROBLEMA 7
 ; Implementar la función recursiva acumulado que a partir de un árbol regrese el mismo árbol, pero donde el valor
