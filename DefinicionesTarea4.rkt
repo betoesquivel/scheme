@@ -70,6 +70,78 @@
     )
   )
 )
+; PROBLEMA 5
+; Implementar la función recursiva estadistica que a partir de la base de datos de equipos de futbol regrese una 
+; lista con los nombres de los equipos, su # de juegos jugados, la diferencia de goles y el # de puntos de cada uno, 
+; ordenada por # de puntos y en caso de empate en puntos, por diferencia de goles. Recordar que el número de puntos 
+; se calcula como 3 puntos por cada juego ganado y 1 por cada juego empatado. 
+; (eq jg je jp gf gc)
+; eq = car
+; jg = cadr, je = caddr, jp = cadddr
+; gf = caddddr, gc = cadddddr
+(define ligaMX '(( America 6 2 1 15 6 )( Atlas 5 3 1 13 8 ) 
+                 ( CruzAzul 2 3 4 7 10 )( Guadalajara 2 3 3 6 9 ) 
+                 ( Jaguares 3 4 2 13 12 )( Leon 3 0 6 15 16 ) 
+                 ( LeonesNegros 1 3 5 3 10 )( Monterrey 5 1 2 10 5 )
+                 ( Morelia 0 3 6 8 21 )( Pachuca 4 1 4 11 11 ) 
+                 ( Puebla 2 4 3 7 11 )( Queretaro 4 2 3 13 10 ) 
+                 ( SantosLaguna 4 3 2 12 9 )( Tijuana 2 5 2 11 9 ) 
+                 ( Toluca 5 2 2 11 8 )( UANL 3 4 2 14 11 ) 
+                 ( UNAM 3 2 4 12 12 )( Veracruz 1 5 3 5 8 )))
+; función que calcula el número de juegos jugados
+(define jugados
+  (lambda (e)
+    (+ (cadr e) (caddr e) (cadddr e))
+  )
+)
+; función que calcula los puntos de un equipo de futbol. 
+(define puntos
+  (lambda (e)
+       (+ (* 3 (cadr e)) (caddr e))
+  )
+)
+; función que obtiene los goles a favor
+(define gf
+  (lambda (e)
+    (car (cddddr e))
+  )
+)
+; función que obtiene los goles en contra
+(define gc
+  (lambda (e)
+    (cadr (cddddr e))
+  )
+)
+; función que obtiene la diferencia de goles de un equipo
+(define diferencia
+  (lambda (e)
+    (- (gf e) (gc e))
+  )
+)
+; función que calcula la información estadística de un equipo
+(define info
+  (lambda (e)
+    (list (car e) (jugados e) (diferencia e) (puntos e))
+  )
+)
+; función que recibe dos equipos y regresa el equipo mayor. 
+(define mayorDe2
+  (lambda (e1 e2)
+    (cond [(null? e2) e1]
+          [(null? e1) e2]
+          [else 
+           (cond 
+             [(equal? (puntos e1) (puntos e2))
+                (cond [(equal? (diferencia e1) (diferencia e2)) e1]
+                      [(> (diferencia e1) (diferencia e2)) e1]
+                      [else e2]
+                )]
+             [(> (puntos e1) (puntos e2)) e1]
+             [else e2]
+           )]
+    )
+  )
+)
 
 ; PROBLEMA 7
 ; Implementar la función recursiva acumulado que a partir de un árbol regrese el mismo árbol, pero donde el valor
